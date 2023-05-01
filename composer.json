@@ -1,0 +1,42 @@
+{
+    "name": "tron-php/tron-php",
+    "description": "PHP SDK for the Tron API",
+    "keywords": [
+        "tron",
+        "trongrid",
+        "api",
+        "php",
+        "sdk"
+    ],
+    "homepage": "https://github.com/tron-php/tron-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eric Chow",
+            "email": "yateric@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-bcmath": "*",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "bacon/bacon-qr-code": "^2.0",
+        "brick/money": "^0.8.0",
+        "illuminate/container": "^10.9",
+        "illuminate/http": "^10.0",
+        "illuminate/support": "^10.0",
+        "simplito/elliptic-php": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TronPHP\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
