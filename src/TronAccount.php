@@ -142,7 +142,7 @@ readonly class TronAccount
         $amount = CryptoCurrency::converter()->convert(
             $money,
             CryptoCurrency\Code::USDT->currency(),
-        )->getAmount()->toInt();
+        )->getMinorAmount()->toInt();
 
         $hexMinorAmount = dechex($amount);
 
