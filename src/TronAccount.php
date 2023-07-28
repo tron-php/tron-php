@@ -40,10 +40,15 @@ readonly class TronAccount
 
     public function transferSun(Money $money, TronAccount|string $to): BroadcastTransactionResponse
     {
+        $amount = CryptoCurrency::converter()->convert(
+            $money,
+            CryptoCurrency\Code::SUN->currency(),
+        )->getAmount()->toInt();
+
         $transaction = $this->api('wallet/createtransaction', [
             'to_address' => Tron::base58ToHex($to instanceof TronAccount ? $to->address : $to),
             'owner_address' => Tron::base58ToHex($this->address),
-            'amount' => $money->getAmount()->toInt(),
+            'amount' => $amount,
         ], 'post');
 
         return $this->broadcastTransaction($transaction);
@@ -133,7 +138,13 @@ readonly class TronAccount
     protected function getRequestDataForUsdtTransfer(Money $money, TronAccount|string $to): array
     {
         $hexToAddress = Tron::base58ToHex($to instanceof TronAccount ? $to->address : $to);
-        $hexMinorAmount = dechex($money->getMinorAmount()->toInt());
+
+        $amount = CryptoCurrency::converter()->convert(
+            $money,
+            CryptoCurrency\Code::USDT->currency(),
+        )->getAmount()->toInt();
+
+        $hexMinorAmount = dechex($amount);
 
         return [
             'owner_address' => Tron::base58ToHex($this->address),
