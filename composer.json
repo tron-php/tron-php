@@ -24,9 +24,9 @@
         "ext-mbstring": "*",
         "bacon/bacon-qr-code": "^2.0",
         "brick/money": "^0.8.0",
-        "illuminate/container": "^10.9",
-        "illuminate/http": "^10.0",
-        "illuminate/support": "^10.0",
+        "illuminate/container": "^11.0",
+        "illuminate/http": "^11.0",
+        "illuminate/support": "^11.0",
         "simplito/elliptic-php": "^1.0"
     },
     "autoload": {
