@@ -17,6 +17,10 @@ class Tron
 
     const ENERGY_SUN_COST = 420;
 
+    const BANDWIDTH_SUN_COST = 1000;
+
+    const USDT_TRANSFER_BANDWIDTH = 345;
+
     public function __construct(protected string $apiKey) {}
 
     public function api(

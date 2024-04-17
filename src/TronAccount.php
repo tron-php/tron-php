@@ -73,6 +73,22 @@ readonly class TronAccount
 
     public function requiredSunForUsdtTransfer(Money $money, TronAccount|string $to): Money
     {
+        $sun = Money::zero(CryptoCurrency\Code::SUN->currency());
+
+        $response = $this->api("wallet/getaccountnet", [
+            'address' => Tron::base58ToHex($this->address),
+        ]);
+
+        if (isset($response['freeNetUsed'])) {
+            $availableBandwidth = $response['freeNetLimit'] - $response['freeNetUsed'];
+
+            if ($availableBandwidth < Tron::USDT_TRANSFER_BANDWIDTH) {
+                $sun = $sun->plus(
+                    Money::of(Tron::BANDWIDTH_SUN_COST, CryptoCurrency\Code::SUN->currency())->multipliedBy(Tron::USDT_TRANSFER_BANDWIDTH)
+                );
+            }
+        }
+
         $requestData = $this->getRequestDataForUsdtTransfer(
             $money,
             $to instanceof TronAccount ? $to->address : $to,
@@ -80,8 +96,9 @@ readonly class TronAccount
 
         $response = $this->api('wallet/triggerconstantcontract', $requestData, 'post');
 
-        return Money::of(Tron::ENERGY_SUN_COST, CryptoCurrency\Code::SUN->currency())
-            ->multipliedBy($response['energy_used']);
+        return $sun->plus(
+            Money::of(Tron::ENERGY_SUN_COST, CryptoCurrency\Code::SUN->currency())->multipliedBy($response['energy_used'])
+        );
     }
 
     public function usdtTransactions(
