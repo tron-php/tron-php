@@ -188,17 +188,27 @@ readonly class TronAccount
 
     protected function broadcastTransaction(array $transaction): BroadcastTransactionResponse
     {
-        $response = $this->api(
+        $rawBroadcastTransactionResponse = $this->api(
             'wallet/broadcasttransaction',
             $this->signTransaction($transaction),
             'post',
         );
 
-        if (! isset($response['result'])) {
-            throw new BroadcastTransactionException($response['code'] ?? '');
+        if (! isset($rawBroadcastTransactionResponse['result'])) {
+            throw new BroadcastTransactionException($rawBroadcastTransactionResponse['code'] ?? '');
         }
 
-        return new BroadcastTransactionResponse($response);
+        $broadcastTransactionResponse = new BroadcastTransactionResponse($rawBroadcastTransactionResponse);
+
+        $rawRransactionInfoResponse = $this->api('walletsolidity/gettransactioninfobyid', [
+            'value' => $broadcastTransactionResponse->transactionId,
+        ]);
+
+        if (isset($rawRransactionInfoResponse['result']) && $rawRransactionInfoResponse['result'] === 'FAILED') {
+            throw new BroadcastTransactionException($rawRransactionInfoResponse['receipt']['result'] ?? '');
+        }
+
+        return $broadcastTransactionResponse;
     }
 
     public static function generate(): static
