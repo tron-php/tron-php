@@ -8,6 +8,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
 use TronPHP\Actions\GenerateTronAccount;
 use TronPHP\Currencies\CryptoCurrency;
+use TronPHP\Exceptions\BroadcastTransactionException;
 use TronPHP\UsdtTransaction\Filter;
 use TronPHP\UsdtTransaction\Target;
 
@@ -192,6 +193,10 @@ readonly class TronAccount
             $this->signTransaction($transaction),
             'post',
         );
+
+        if (! isset($response['result'])) {
+            throw new BroadcastTransactionException($response['code'] ?? '');
+        }
 
         return new BroadcastTransactionResponse($response);
     }
