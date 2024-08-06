@@ -200,12 +200,12 @@ readonly class TronAccount
 
         $broadcastTransactionResponse = new BroadcastTransactionResponse($rawBroadcastTransactionResponse);
 
-        $rawRransactionInfoResponse = $this->api('walletsolidity/gettransactioninfobyid', [
+        $rawTransactionInfoResponse = $this->api('walletsolidity/gettransactioninfobyid', [
             'value' => $broadcastTransactionResponse->transactionId,
         ]);
 
-        if (isset($rawRransactionInfoResponse['result']) && $rawRransactionInfoResponse['result'] === 'FAILED') {
-            throw new BroadcastTransactionException($rawRransactionInfoResponse['receipt']['result'] ?? '');
+        if (isset($rawTransactionInfoResponse['result']) && $rawTransactionInfoResponse['result'] === 'FAILED') {
+            throw new BroadcastTransactionException($rawTransactionInfoResponse['receipt']['result'] ?? '');
         }
 
         return $broadcastTransactionResponse;
