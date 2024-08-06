@@ -5,6 +5,7 @@ namespace TronPHP;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use TronPHP\Exceptions\TronApiException;
 use TronPHP\Support\Base58Check;
 use TronPHP\Tron\Api;
 use TronPHP\Tron\Network;
@@ -33,7 +34,13 @@ class Tron
     {
         $path = Str::start($path, '/');
 
-        return $this->http($api, $network)->{$method}($path, $data)->throw()->json();
+        $response = $this->http($api, $network)->{$method}($path, $data)->throw()->json();
+
+        if (isset($response['Error'])) {
+            throw new TronApiException($response['Error']);
+        }
+
+        return $response;
     }
 
     public function tronGridApi(
