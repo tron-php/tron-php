@@ -24,19 +24,18 @@ abstract class CryptoCurrency
 
     public static function converter(): CurrencyConverter
     {
-        $exchangeRateProvider = new ConfigurableProvider;
-
-        $exchangeRateProvider->setExchangeRate(
-            CryptoCurrency\Code::SUN->value,
-            CryptoCurrency\Code::TRX->value,
-            0.000001,
-        );
-
-        $exchangeRateProvider->setExchangeRate(
-            CryptoCurrency\Code::TRX->value,
-            CryptoCurrency\Code::SUN->value,
-            1000000,
-        );
+        $exchangeRateProvider = ConfigurableProvider::builder()
+            ->addExchangeRate(
+                CryptoCurrency\Code::SUN->value,
+                CryptoCurrency\Code::TRX->value,
+                '0.000001',
+            )
+            ->addExchangeRate(
+                CryptoCurrency\Code::TRX->value,
+                CryptoCurrency\Code::SUN->value,
+                '1000000',
+            )
+            ->build();
 
         return new CurrencyConverter($exchangeRateProvider);
     }
